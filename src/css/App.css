@@ -1,0 +1,173 @@
+
+body {
+  background-image: url('../../public/images/lms.jpg'); /* Update with your image path */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.card {
+  background-color: rgba(255, 255, 255, 0.6); /* Card opacity (adjust as needed) */
+}
+
+.card-custom-background {
+  background-color: blue;
+}
+
+
+
+ /* Add this CSS to your App.css or a separate CSS file */
+.card-hover:hover {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Add a box-shadow effect */
+  transform: scale(1.05); /* Add a slight scale-up effect on hover */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add smooth transition */
+}
+
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  background-color: black;
+  text-align: center;
+  color: white;
+}
+
+
+.logout-container {
+  background-color: #f0f0f0; /* Set the background color */
+  padding: 20px; /* Add padding for spacing */
+  border-radius: 5px; /* Add border-radius for rounded corners */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add a box shadow for depth */
+}
+
+/* Add this to your global CSS or component-specific CSS as needed */
+.content-wrapper {
+  margin-top: 60px; /* Adjust to match the height of your header */
+  display: flex;
+}
+
+/* Other styles for the content-wrapper if needed */
+
+
+
+/* Circle 1 (Green) */
+.circle.green {
+  border: 15px solid #00cc00; /* Green border color */
+  border-radius: 50%;
+  width: 120px; /* Adjust the width and height as needed */
+  height: 120px; /* Adjust the width and height as needed */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; /* Center horizontally */
+  z-index: 86;
+}
+
+/* Circle 2 (Blue) */
+.circle.blue {
+  border: 15px solid #0077cc; /* Blue border color */
+  border-radius: 50%;
+  width: 120px; /* Adjust the width and height as needed */
+  height: 120px; /* Adjust the width and height as needed */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; /* Center horizontally */
+  z-index: 86;
+}
+
+/* Circle 3 (Red) */
+.circle.red {
+  border: 15px solid #cc0000; /* Red border color */
+  border-radius: 50%;
+  width: 120px; /* Adjust the width and height as needed */
+  height: 120px; /* Adjust the width and height as needed */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; /* Center horizontally */
+  z-index: 86;
+}
+
+/* Circle 4 (Filled) */
+.circle.filled {
+  background-color: #666666;
+}
+
+/* Circle Text Styles */
+.circle h3 {
+  margin-top: 10px; /* Adjust the margin-top as needed */
+  text-align: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: #f84342;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  display: block;
+}
+
+.circle h1 {
+  text-align: center;
+  font-weight: 800;
+  font-size: 24px; /* Adjust the font size as needed */
+  color: #222222;
+  text-decoration: none;
+  display: block;
+  letter-spacing: -0.02em;
+  word-spacing: -0.02em;
+  line-height: 1;
+  text-align: center;
+  margin-top: 10px; /* Adjust the margin-top as needed */
+}
