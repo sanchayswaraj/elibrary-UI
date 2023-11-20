@@ -18,7 +18,11 @@ function SurfEBooks() {
   const [showModal, setShowModal] = useState(false);
   const [selectedEbook, setSelectedEbook] = useState(null);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const [showRecommendModal, setShowRecommendModal] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false); // Added state for full description
+
+  const [recommendEmail, setRecommendEmail] = useState('');
+  const [recommendationSent, setRecommendationSent] = useState(false);
 
   const ebookData = [
     {
@@ -55,7 +59,7 @@ function SurfEBooks() {
       author: 'Henry Kissinger',
       category: 'Technology',
       imageUrl: '/images/book3.jpg',
-      description: 'Robin Sharma',
+  description: 'The Age of A.I. explores the impact of artificial intelligence on various aspects of society. Henry Kissinger, a renowned political figure, delves into the ethical, social, and geopolitical challenges posed by the rise of A.I. This insightful book offers a thoughtful analysis of the transformative power of artificial intelligence and its implications for the future.',
       bookPoints: 150,
     },
     {
@@ -69,7 +73,6 @@ function SurfEBooks() {
     },
     // Add more e-books here with incrementing IDs
   ];
-
 
   // Function to open the modal
   const openModal = (ebook) => {
@@ -95,6 +98,37 @@ function SurfEBooks() {
   const closeSubscriptionModal = () => {
     setShowSubscriptionModal(false);
   };
+
+  // Function to open the recommendation modal
+  const openRecommendModal = () => {
+    setShowRecommendModal(true);
+  };
+
+// Function to close the recommendation modal and reset recommendation-related state
+const closeRecommendModal = () => {
+  setShowRecommendModal(false);
+  setRecommendEmail('');
+  setRecommendationSent(false);
+};
+
+// Function to recommend the eBook to a colleague
+const recommendToColleague = () => {
+  // Reset the recommendation status
+  setRecommendationSent(false);
+
+  // You can add email validation here
+  const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  if (!emailPattern.test(recommendEmail)) {
+    // Handle email validation error (e.g., display an error message)
+    return;
+  }
+
+  // Send the recommendation email
+  // You can implement your logic to send an email here (e.g., using an API)
+
+  // Mark recommendation as sent
+  setRecommendationSent(true);
+};
 
   // Apply filtering logic based on search criteria in real-time
   const filteredEbookData = ebookData.filter((ebook) => {
@@ -164,7 +198,7 @@ function SurfEBooks() {
                 <Row>
                   {filteredEbookData.map((ebook, index) => (
                     <Col sm={4} key={index}>
-                      <Card className="mb-4 card-hover" card style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
+                      <Card className="mb-4 card-hover" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
                         <Card.Img
                           variant="top"
                           src={ebook.imageUrl}
@@ -173,19 +207,17 @@ function SurfEBooks() {
                         />
                         <Card.Body>
                           <Card.Title>{ebook.title}</Card.Title>
-                          <Card.Text >
+                          <Card.Text>
                             <strong>Author:</strong> {ebook.author}
                             <br />
                             <strong>Category:</strong> {ebook.category}
                             <br />
-
                             <strong>Points:</strong> {ebook.bookPoints}
-
                           </Card.Text>
-                          <Button class="btn btn-primary" onClick={() => openModal(ebook)}>
+                          <Button variant="primary" onClick={() => openModal(ebook)}>
                             <FontAwesomeIcon icon={faEye} /> Preview
                           </Button>{" "}
-                          <Button class="btn btn-primary" onClick={() => openSubscriptionModal(ebook)}>
+                          <Button variant="primary" onClick={() => openSubscriptionModal(ebook)}>
                             <FontAwesomeIcon icon={faEnvelope} /> Subscribe
                           </Button>{" "}
                         </Card.Body>
@@ -235,11 +267,13 @@ function SurfEBooks() {
                   </>
                 )}
               </p>
+              <Button variant="primary" onClick={() => openRecommendModal()}>
+                Recommend to Colleague
+              </Button>
             </div>
           )}
         </Modal.Body>
         <Modal.Footer>
-
           <Button variant="secondary" onClick={closeModal}>
             Close
           </Button>
@@ -256,6 +290,36 @@ function SurfEBooks() {
           <SubscriptionForm ebookTitle={selectedEbook && selectedEbook.title} ebookId={selectedEbook && selectedEbook.ebookId} bookPoints={selectedEbook && selectedEbook.bookPoints} />
         </Modal.Body>
       </Modal>
+
+  { /* Modal for Recommending to Colleague*/}
+<Modal show={showRecommendModal} onHide={closeRecommendModal}>
+  <Modal.Header closeButton>
+    <Modal.Title>Recommend to Colleague</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <Form>
+      <Form.Group controlId="recommendEmail">
+        <Form.Label>Colleague's Email</Form.Label>
+        <Form.Control
+          type="email"
+          placeholder="Enter colleague's email"
+          value={recommendEmail}
+          onChange={(e) => setRecommendEmail(e.target.value)}
+        />
+      </Form.Group>
+    </Form>
+    {recommendationSent && <p>Recommendation to {recommendEmail} sent.</p>}
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={closeRecommendModal}>
+      Close
+    </Button>
+    <Button variant="primary" onClick={recommendToColleague}>
+      Recommend
+    </Button>
+  </Modal.Footer>
+</Modal>
+
     </div>
   );
 }

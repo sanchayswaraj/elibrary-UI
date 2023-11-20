@@ -21,27 +21,29 @@ function Login() {
       setIsLoading(true);
       setTimeout(() => {
         setIsLoading(false);
-
+  
         // Retrieve existing user data or initialize an empty array
         const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
-
-        // Find the user with the matching username and password
-        const user = existingUsers.find(
-          (u) => u.email === username && u.password === password
-        );
-
+  
+        // Find the user with the matching username
+        const user = existingUsers.find((u) => u.email === username);
+  
         if (user) {
-          // Store the logged-in user details in local storage
-          localStorage.setItem('loggedInUser', JSON.stringify(user));
-
-          window.location.href = '/dashboard';
+          // Check if the password is correct
+          if (user.password === password) {
+            // Store the logged-in user details in local storage
+            localStorage.setItem('loggedInUser', JSON.stringify(user));
+            window.location.href = '/dashboard';
+          } else {
+            setError('Incorrect password. Please try again.');
+          }
         } else {
           setError('Invalid credentials. Please try again.');
         }
       }, 2000);
     }
   };
-
+  
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
