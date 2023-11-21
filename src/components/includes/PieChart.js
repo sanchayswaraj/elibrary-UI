@@ -1,22 +1,23 @@
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 
-function PieChart() {
+function PieChart({ ebookCategoryData }) {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
   useEffect(() => {
+    // Modify data based on your ebookCategoryData
     const data = {
-      labels: ["Sci-Fi", "Novels", "Technical", "History", "Others"],
+      labels: Object.keys(ebookCategoryData),
       datasets: [
         {
-          data: [15, 25, 10, 20, 15, 15],
+          data: Object.values(ebookCategoryData),
           backgroundColor: [
-            "#FF5733",
-            "#FFC300",
-            "#DAF7A6",
-            "#FF5733",
-            "#FFC300",
+            "rgba(255, 99, 132, 0.8)",
+            "rgba(54, 162, 235, 0.8)",
+            "rgba(255, 205, 86, 0.8)",
+            "rgba(75, 192, 192, 0.8)",
+            // Add more colors if needed
           ],
         },
       ],
@@ -24,11 +25,11 @@ function PieChart() {
 
     const options = {
       responsive: true,
-      maintainAspectRatio: false, // Disable aspect ratio to control size
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           labels: {
-            fontSize: 12, // Reduce legend label font size
+            fontSize: 12,
           },
         },
       },
@@ -40,7 +41,6 @@ function PieChart() {
       chartInstance.current.destroy();
     }
 
-    // Adjust the canvas dimensions (e.g., 150x150)
     chartRef.current.width = 250;
     chartRef.current.height = 250;
 
@@ -55,11 +55,10 @@ function PieChart() {
         chartInstance.current.destroy();
       }
     };
-  }, []);
+  }, [ebookCategoryData]); // Add ebookCategoryData as a dependency
 
   return (
     <div className="pie-chart">
-      {/* Canvas element with explicit width and height */}
       <canvas ref={chartRef}></canvas>
     </div>
   );
