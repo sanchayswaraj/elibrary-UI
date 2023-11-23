@@ -28,17 +28,20 @@ function SubscriptionForm({ ebookTitle, ebookId, bookPoints }) {
       const userEmail = loggedInUserDetails.email;
       const userName = loggedInUserDetails.name;
       const userId = loggedInUserDetails.id; // Assuming 'id' is the key for user's id
+      const userJoiningTimestamp = loggedInUserDetails.joiningDate; // Assuming 'joiningDate' is the key for joining date
 
-      // Set the email and name in the component's state
+      // Convert the timestamp to a human-readable date
+      const userJoiningDate = new Date(userJoiningTimestamp).toISOString().split('T')[0];
+  
+      // Set the email, name, and joining date in the component's state
       setUserEmail(userEmail);
       setName(userName);
-
-      // Set default values for globalId and empId using the user's id
       setGlobalId(userId);
       setEmpId(userId);
+      setJoiningDate(userJoiningDate || ''); // Set the default value for joining date
     }
   }, []);
-
+  
 
     // Function to clear the error message
     const clearErrorMessage = () => {
@@ -90,6 +93,7 @@ function SubscriptionForm({ ebookTitle, ebookId, bookPoints }) {
       ebookId,
       ebookTitle,
       subscriptionDate: new Date().toLocaleDateString(),
+      timestamp: new Date().toISOString(), // Include timestamp in the subscription data
       userEmail,
       bookPoints, // Include bookPoints in the subscription data
     };

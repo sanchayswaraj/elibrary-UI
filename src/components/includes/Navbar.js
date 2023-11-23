@@ -1,33 +1,76 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell, faUser, faSignOutAlt, faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import Dropdown from 'react-bootstrap/Dropdown';
+import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBell,
+  faUser,
+  faSignOutAlt,
+  faEnvelope,
+} from "@fortawesome/free-solid-svg-icons";
+import Dropdown from "react-bootstrap/Dropdown";
 
 function Navbar() {
   const iconStyle = {
-    color: 'white',
-    cursor: 'pointer',
+    color: "white",
+    cursor: "pointer",
   };
 
   // Custom CSS styles for the icon buttons
   const iconButtonStyle = {
-    background: 'none',
-    border: 'none',
+    background: "none",
+    border: "none",
   };
 
   const navbarStyle = {
-    position: 'fixed',
+    position: "fixed",
     top: 0,
-    width: '100%',
+    width: "100%",
     zIndex: 1000,
-    padding: '10px 10px', // Add padding (adjust values as needed)
-    margin: '0',
+    padding: "10px 10px", // Add padding (adjust values as needed)
+    margin: "0",
   };
 
-    // Fetch the currently logged-in username from local storage
-    const loggedInUserDetails = JSON.parse(localStorage.getItem('loggedInUser'));
-    const loggedInUserName = loggedInUserDetails ? loggedInUserDetails.name : '';
-    console.log(loggedInUserName)
-  
+  // Fetch the currently logged-in user details from local storage
+  const loggedInUserDetails = JSON.parse(localStorage.getItem("loggedInUser"));
+  const loggedInUserEmail = loggedInUserDetails ? loggedInUserDetails.email : "";
+  const loggedInUserName = loggedInUserDetails ? loggedInUserDetails.name : "";
+
+  // Notification state
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    // Fetch subscriptions and user data
+    const subscriptions =
+      JSON.parse(localStorage.getItem("subscriptions")) || [];
+
+    // Filter subscriptions within the last hour for the current user
+    const currentTimestamp = new Date().getTime();
+    const lastOneHourTimestamp = currentTimestamp - 60 * 15 * 1000; // One hour ago
+
+    const newSubscriptions = subscriptions.filter(
+      (subscription) =>
+        subscription.userEmail === loggedInUserEmail &&
+        new Date(subscription.timestamp).getTime() > lastOneHourTimestamp
+    );
+
+    // Extract book names from new subscriptions
+    const newBookNames = newSubscriptions.map(
+      (subscription) => subscription.ebookTitle
+    );
+
+    // Create notifications
+    const newNotifications = newBookNames.map((bookname) => ({
+      message: `Congratulations, you have subscribed to ${bookname}`,
+      bookname,
+    }));
+
+    // Update the notifications state
+    setNotifications(newNotifications);
+  }, [loggedInUserEmail]);
+
+  // Clear notifications
+  const clearNotifications = () => {
+    setNotifications([]);
+  };
 
   return (
     <header className="navbar navbar-dark bg-dark" style={navbarStyle}>
@@ -43,8 +86,11 @@ function Navbar() {
           </a>
         </div>
         {/* Icons Container */}
-        <div className="d-flex align-items-center"> {/* Updated this line */}
-          <span style={{ color: 'white', marginRight: '10px' }}>Welcome, {loggedInUserName}</span> {/* Display the username */}
+        <div className="d-flex align-items-center">
+          <span style={{ color: "white", marginRight: "10px" }}>
+            Welcome, {loggedInUserName}
+          </span>{" "}
+          {/* Display the username */}
           <Dropdown>
             <Dropdown.Toggle
               variant="success"
@@ -52,20 +98,33 @@ function Navbar() {
               style={iconButtonStyle}
             >
               <FontAwesomeIcon icon={faBell} style={iconStyle} />
+              {notifications.length > 0 && (
+                <span className="badge badge-pill badge-danger ml-1">
+                  {notifications.length}
+                </span>
+              )}
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              <Dropdown.Item href="#/action-1">
-                <FontAwesomeIcon icon={faEnvelope} className="mr-2" /> Notification1
+            {notifications.length === 0 ? (
+              <Dropdown.Item disabled>
+                You are all caught up, come back later
               </Dropdown.Item>
-              <Dropdown.Item href="#/action-2">
-                <FontAwesomeIcon icon={faEnvelope} className="mr-2" /> Notification2
-              </Dropdown.Item>
-              <Dropdown.Item href="#/action-3">
-                <FontAwesomeIcon icon={faEnvelope} className="mr-2" /> Notification3
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+            ) : (
+              <>
+                {notifications.map((notification, index) => (
+                  <Dropdown.Item key={index}>
+                    <FontAwesomeIcon icon={faEnvelope} className="mr-2" />{" "}
+                    {notification.message}
+                  </Dropdown.Item>
+                ))}
+                <Dropdown.Item onClick={clearNotifications}>
+                  <small>Clear</small>
+                </Dropdown.Item>
+              </>
+            )}
+          </Dropdown.Menu>
+        </Dropdown>
 
           <Dropdown>
             <Dropdown.Toggle

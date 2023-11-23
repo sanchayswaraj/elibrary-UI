@@ -75,15 +75,18 @@ function Signup() {
       return;
     }
 
-    // Generate a unique user ID
-    const userId = generateUserId();
+  // Generate a unique user ID
+  const userId = generateUserId();
 
-    const user = {
-      id: userId,
-      name: name,
-      email: username,
-      password: password,
-    };
+  const user = {
+    id: userId,
+    name: name,
+    email: username,
+    password: password,
+    joiningDate: new Date().toISOString(), // Store the current date and time
+    phoneNumber: '', // Initialize with an empty string
+    address: '', // Initialize with an empty string
+  };
 
     // Add the new user to the existing users array
     existingUsers.push(user);
