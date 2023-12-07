@@ -8,6 +8,7 @@ import SurfBooks from "./SurfBooks";
 import TakeQuiz from "./TakeQuiz";
 import SubscriptionForm from "./SubscriptionForm";
 import MyAccount from "./MyAccount";
+import ActiveSubscriptions from "./ActiveSubscriptions";
 
 
 function Routing() {
@@ -24,6 +25,7 @@ function Routing() {
           <Route path="/take-quiz" element={<TakeQuiz />}></Route>
           <Route path="/subscription" element={<SubscriptionForm />}></Route>
           <Route path="/account" element={<MyAccount />}></Route>
+          <Route path="/active-subscriptions" element={<ActiveSubscriptions />}></Route>
 
 
 

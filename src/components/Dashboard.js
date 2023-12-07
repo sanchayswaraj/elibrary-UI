@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom"; // Import Link
 import { Container, Row, Col, Card, Table } from "react-bootstrap";
 import PieChart from "./includes/PieChart";
 import Navbar from "./includes/Navbar";
@@ -8,10 +9,18 @@ import ebookData from "./includes/ebookData";
 
 function Dashboard() {
   const [subscriptionData, setSubscriptionData] = useState([]);
-  const [totalBookPointsForCurrentUser, setTotalBookPointsForCurrentUser] = useState(0);
+  const [totalBookPointsForCurrentUser, setTotalBookPointsForCurrentUser] =
+    useState(0);
   const [ebookCategoryData, setEbookCategoryData] = useState([]);
   const [activeSubscriptionsCount, setActiveSubscriptionsCount] = useState(0);
   const [totalBooksSubscribed, setTotalBooksSubscribed] = useState(0); // Define totalBooksSubscribed
+
+  const handleActiveSubscriptionsClick = () => {
+    // Use Link to navigate to /active-subscriptions
+    // You can adjust the "to" prop based on your route configuration
+    // For example, if your route is /dashboard/active-subscriptions, set to="/dashboard/active-subscriptions"
+    return <Link to="/active-subscriptions" />;
+  };
 
   useEffect(() => {
     // Fetch subscriptions and user data
@@ -47,14 +56,12 @@ function Dashboard() {
 
       setActiveSubscriptionsCount(activeSubscriptions.length);
 
-    // Display the count of total books subscribed by the current logged-in user
-    const totalBooksSubscribed = userSubscriptions.length;
-    // You can use this count as needed, for example, to display it in your UI
-    console.log("Total books subscribed:", totalBooksSubscribed);
-    setTotalBooksSubscribed(totalBooksSubscribed);
-    
-  
-  }
+      // Display the count of total books subscribed by the current logged-in user
+      const totalBooksSubscribed = userSubscriptions.length;
+      // You can use this count as needed, for example, to display it in your UI
+      console.log("Total books subscribed:", totalBooksSubscribed);
+      setTotalBooksSubscribed(totalBooksSubscribed);
+    }
 
     const getEbookCategoryData = (data) => {
       const categoryData = {};
@@ -162,18 +169,25 @@ function Dashboard() {
                 </Col>
 
                 <Col sm={4}>
-                  <Card
-                    className="card-hover"
-                    style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                  {/* Wrap Card with Link */}
+                  <Link
+                    to="/active-subscriptions"
+                    style={{ textDecoration: "none" }}
                   >
-                    <Card.Body>
-                      <h5>Active Subscriptions</h5>
-                      <p>Number of Books Currently reading</p>
-                      <div className="circle red">
-                        <h1>{activeSubscriptionsCount}</h1>
-                      </div>
-                    </Card.Body>
-                  </Card>
+                    {/* Your Card content */}
+                    <Card
+                      className="card-hover"
+                      style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+                    >
+                      <Card.Body onClick={handleActiveSubscriptionsClick}>
+                        <h5>Active Subscriptions</h5>
+                        <p>Number of Books Currently reading</p>
+                        <div className="circle red">
+                          <h1>{activeSubscriptionsCount}</h1>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  </Link>
                 </Col>
               </Row>
               <br />

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Card, Table, Button } from "react-bootstrap";
+import { Container, Row, Col, Card, Table } from "react-bootstrap";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import Button from "@mui/material/Button";
 import {
-  faHourglassHalf,
   faArrowLeft,
   faArrowRight,
   faCheck,
@@ -19,7 +20,6 @@ function TakeQuiz() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [totalPoints, setTotalPoints] = useState(0);
   const [subscriptions, setSubscriptions] = useState([]);
-  const [sortDirection, setSortDirection] = useState("asc");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Initialize to 0
 
   const resetQuiz = () => {
@@ -30,9 +30,6 @@ function TakeQuiz() {
     setCurrentQuestionIndex(0);
   };
 
-  const toggleSortDirection = () => {
-    setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-  };
 
   const handleNextQuestion = () => {
     setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -42,10 +39,8 @@ function TakeQuiz() {
     setCurrentQuestionIndex(currentQuestionIndex - 1);
   };
 
-//Including the Quiz questions file where questions are stored
-const quizQuestions = quizData;
-
-
+  //Including the Quiz questions file where questions are stored
+  const quizQuestions = quizData;
 
   useEffect(() => {
     const subscriptionsData = JSON.parse(localStorage.getItem("subscriptions"));
@@ -116,17 +111,15 @@ const quizQuestions = quizData;
     setSubscriptions(updatedSubscriptions);
   };
 
-  
-
   const renderQuizQuestions = () => {
     if (!selectedQuiz || !selectedQuiz.ebookTitle) {
       return <p>No quiz questions available for this eBook.</p>;
     }
-  
+
     const quizQuestion = quizQuestions.find(
       (questionSet) => questionSet.ebookTitle === selectedQuiz.ebookTitle
     );
-  
+
     if (
       !quizQuestion ||
       !quizQuestion.questions ||
@@ -134,12 +127,12 @@ const quizQuestions = quizData;
     ) {
       return <p>No quiz questions available for this eBook.</p>;
     }
-  
-    const currentQuestion = quizQuestion.questions[currentQuestionIndex];
-  
-    const isLastQuestion = currentQuestionIndex === quizQuestion.questions.length - 1;
-    const isQuizSubmitted = totalPoints > 0; // Check if the quiz is submitted
 
+    const currentQuestion = quizQuestion.questions[currentQuestionIndex];
+
+    const isLastQuestion =
+      currentQuestionIndex === quizQuestion.questions.length - 1;
+    const isQuizSubmitted = totalPoints > 0; // Check if the quiz is submitted
 
     return (
       <div>
@@ -211,7 +204,9 @@ const quizQuestions = quizData;
                 Next <FontAwesomeIcon icon={faArrowRight} />
               </span>
             )}
-          </Button><br/><br/>
+          </Button>
+          <br />
+          <br />
           <Button variant="danger" onClick={resetQuiz}>
             <span>
               <FontAwesomeIcon icon={faUndo} /> Reset
@@ -219,12 +214,12 @@ const quizQuestions = quizData;
           </Button>
         </div>
         {isQuizSubmitted && ( // Render "Total Points" if the quiz is submitted
-        <div
-          style={{ marginTop: "10px", fontWeight: "bold", fontSize: "20px" }}
-        >
-          Total Points: {totalPoints}
-        </div>
-      )}
+          <div
+            style={{ marginTop: "10px", fontWeight: "bold", fontSize: "20px" }}
+          >
+            Total Points: {totalPoints}
+          </div>
+        )}
       </div>
     );
   };
@@ -245,15 +240,7 @@ const quizQuestions = quizData;
                   <Table bordered hover>
                     <thead>
                       <tr>
-                        <th>
-                          Ebook Name{" "}
-                          <span
-                            onClick={toggleSortDirection}
-                            style={{ cursor: "pointer" }}
-                          >
-                            {sortDirection === "asc" ? "⬆️" : "⬇️"}
-                          </span>
-                        </th>
+                        <th>Ebook Name</th>
                         <th>Subscription Date</th>
                         <th>Subscription ID</th>
                         <th>Action</th>
@@ -267,11 +254,11 @@ const quizQuestions = quizData;
                           <td>{subscription.subscriptionId}</td>
                           <td>
                             <Button
-                              variant="primary"
+                              variant="contained"
+                              color="success"
                               onClick={() => handleQuizSelection(subscription)}
                             >
-                              <FontAwesomeIcon icon={faHourglassHalf} /> Attempt
-                              Quiz
+                              <AssignmentIcon /> Attempt Quiz
                             </Button>
                           </td>
                         </tr>

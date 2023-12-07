@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Header from './includes/Header';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import Footer from './includes/Footer';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import Header from "./includes/Header";
+import Footer from "./includes/Footer";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Alert from "@mui/material/Alert";
 
 function Signup() {
-  const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
@@ -19,7 +26,6 @@ function Signup() {
   };
 
   const isPasswordValid = () => {
-    // Implement your password validation logic here
     return (
       password.length >= 6 &&
       /[A-Z]/.test(password) &&
@@ -29,204 +35,268 @@ function Signup() {
   };
 
   const generateUserId = () => {
-    // Retrieve existing user data or initialize an empty array
-    const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
-
-    // Find the maximum user ID
+    const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
     const maxUserId = existingUsers.reduce((max, user) => {
       const userId = parseInt(user.id);
       return userId > max ? userId : max;
-    }, 99); // Start from 99 to ensure it starts from 100
+    }, 99);
 
-    // Increment the maximum user ID to generate a unique ID
     return (maxUserId + 1).toString();
   };
 
+  const handleTimeout = () => {
+    setTimeout(() => {
+      setShowErrorMessage(false);
+      setShowSuccessMessage(false);
+    }, 3000);
+  };
+
   const handleSignup = () => {
+    if (
+      !name.trim() ||
+      !username.trim() ||
+      !password.trim() ||
+      !confirmPassword.trim()
+    ) {
+      setShowErrorMessage("Please fill in all fields.");
+      setShowSuccessMessage(false);
+      handleTimeout();
+      return;
+    }
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(username)) {
-      setShowErrorMessage('Please provide a valid email.');
+      setShowErrorMessage("Please provide a valid email.");
       setShowSuccessMessage(false);
+      handleTimeout();
       return;
     }
 
     if (!isPasswordValid()) {
-      setShowErrorMessage('Password does not meet the requirements.');
+      setShowErrorMessage("Password does not meet the requirements.");
       setShowSuccessMessage(false);
+      handleTimeout();
       return;
     }
 
-    if (!name.trim() || !username.trim() || !password.trim() || !confirmPassword.trim()) {
-      setShowErrorMessage('Please fill in all fields.');
+    if (password !== confirmPassword) {
+      setShowErrorMessage("Passwords do not match.");
       setShowSuccessMessage(false);
+      handleTimeout();
       return;
     }
 
-    // Retrieve existing user data or initialize an empty array
-    const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
+    const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
 
-    // Check if the email or username is already registered
-    const isUserRegistered = existingUsers.some((user) => user.email === username);
+    const isUserRegistered = existingUsers.some(
+      (user) => user.email === username
+    );
 
     if (isUserRegistered) {
-      setShowErrorMessage('This email or username is already registered.');
+      setShowErrorMessage("This email or username is already registered.");
       setShowSuccessMessage(false);
       return;
     }
 
-  // Generate a unique user ID
-  const userId = generateUserId();
+    const userId = generateUserId();
 
-  const user = {
-    id: userId,
-    name: name,
-    email: username,
-    password: password,
-    joiningDate: new Date().toISOString(), // Store the current date and time
-    phoneNumber: '', // Initialize with an empty string
-    address: '', // Initialize with an empty string
-  };
+    const user = {
+      id: userId,
+      name: name,
+      email: username,
+      password: password,
+      joiningDate: new Date().toISOString(),
+      phoneNumber: "",
+      address: "",
+    };
 
-    // Add the new user to the existing users array
     existingUsers.push(user);
+    localStorage.setItem("users", JSON.stringify(existingUsers));
 
-    // Store the updated users array in localStorage
-    localStorage.setItem('users', JSON.stringify(existingUsers));
+    setShowSuccessMessage("Account created successfully.");
+    handleTimeout();
 
-    // Show a success message
-    setShowSuccessMessage('Account created successfully.');
-
-    // Clear the form fields
-    setName('');
-    setUsername('');
-    setPassword('');
-    setConfirmPassword('');
+    setName("");
+    setUsername("");
+    setPassword("");
+    setConfirmPassword("");
   };
 
   return (
     <div className="App">
       <Header />
-      <div className="container">
-        <div className="row justify-content-center mt-5 ">
-          <div className="col-md-4">
+      <Container component="main" maxWidth="xs">
+        <div className="row justify-content-center mt-2">
+          <div className="col-md-12">
             <div className="card">
               <div className="card-body">
-                <h2 className="card-title text-center">Signup</h2>
-                <p className='text-muted'>It's quick and easy</p>
-                {showErrorMessage && (
-                  <div className="alert alert-danger">{showErrorMessage}</div>
-                )}
-                {showSuccessMessage && (
-                  <div className="alert alert-success">{showSuccessMessage}</div>
-                )}
+                <Typography component="h1" variant="h5" align="center">
+                  Signup
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  align="center"
+                >
+                  It's quick and easy
+                </Typography>
+                {/* Alert Container with Styling */}
+                <div style={{ position: "relative", marginTop: "20px" }}></div>
+
                 <form>
-                  <div className="mb-3">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Full Name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Username or Email"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <div className="input-group">
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        className="form-control"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                      />
-                      <span className="input-group-append">
-                        <button
-                          type="button"
-                          className="btn btn-outline-secondary"
-                          onClick={togglePasswordVisibility}
-                        >
-                          <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
-                        </button>
-                      </span>
-                    </div>
-                  </div>
-                  {password !== '' && (
-                    <div className="text-muted" style={{ textAlign: 'left' }}>
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="name"
+                    label="Full Name"
+                    name="name"
+                    autoComplete="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="username"
+                    label="Username or Email"
+                    name="username"
+                    autoComplete="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                  <TextField
+                    fullWidth
+                    margin="normal"
+                    label="Password"
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton onClick={togglePasswordVisibility}>
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  {password !== "" && (
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      align="left"
+                    >
                       <b>Password must contain:</b>
-                      <ul style={{ listStyle: 'inside', paddingLeft: 0 }}>
+                      <ul style={{ listStyle: "inside", paddingLeft: 0 }}>
                         <li>
                           At least 6 characters
                           {password.length >= 6 ? (
-                            <span className="text-success">✔</span>
+                            <span style={{ color: "green" }}>✔</span>
                           ) : (
-                            <span className="text-danger">✘</span>
+                            <span style={{ color: "red" }}>✘</span>
                           )}
                         </li>
                         <li>
                           At least one capital letter
                           {/[A-Z]/.test(password) ? (
-                            <span className="text-success">✔</span>
+                            <span style={{ color: "green" }}>✔</span>
                           ) : (
-                            <span className="text-danger">✘</span>
+                            <span style={{ color: "red" }}>✘</span>
                           )}
                         </li>
                         <li>
                           At least one number
                           {/\d/.test(password) ? (
-                            <span className="text-success">✔</span>
+                            <span style={{ color: "green" }}>✔</span>
                           ) : (
-                            <span className="text-danger">✘</span>
+                            <span style={{ color: "red" }}>✘</span>
                           )}
                         </li>
                         <li>
                           At least one special character
                           {/[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/.test(password) ? (
-                            <span className="text-success">✔</span>
+                            <span style={{ color: "green" }}>✔</span>
                           ) : (
-                            <span className="text-danger">✘</span>
+                            <span style={{ color: "red" }}>✘</span>
                           )}
                         </li>
                       </ul>
-                    </div>
+                    </Typography>
                   )}
-                  <div className="mb-3">
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="Confirm Password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                    {password !== '' && confirmPassword !== '' && password !== confirmPassword && (
-                      <div className="text-danger">Passwords do not match.</div>
+                  <TextField
+                    fullWidth
+                    margin="normal"
+                    label="Confirm Password"
+                    type="password"
+                    id="confirmPassword"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+
+                  {password !== "" &&
+                    confirmPassword !== "" &&
+                    password !== confirmPassword && (
+                      <Typography variant="body2" color="error">
+                        Passwords do not match.
+                      </Typography>
                     )}
-                  </div>
-                  <button
+                                      {showErrorMessage && (
+                    
+                    <Alert
+                      severity="error"
+                      style={{
+                        margin: "20px 0 0", // Add top margin of 20px
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                      }}
+                    >
+                      {showErrorMessage}
+                    </Alert>
+                  )}
+                  {showSuccessMessage && (
+                    <Alert
+                      severity="success"
+                      style={{
+                        margin: "20px 0 0", // Add top margin of 20px
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                      }}
+                    >
+                      {showSuccessMessage}
+                    </Alert>
+                  )}
+                  <Button
                     type="button"
-                    className="btn btn-primary btn-block"
+                    fullWidth
+                    variant="contained"
+                    color="success"
                     onClick={handleSignup}
+                    style={{ marginTop: "20px" }}
                   >
                     Signup
-                  </button>
-                  {/* Use Link component to navigate to the login page */}
-                  <p className="text-center mt-3">
+                  </Button>
+
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    align="center"
+                    style={{ marginTop: "20px" }}
+                  >
                     Already have an account? <Link to="/login">Login</Link>
-                  </p>
+                  </Typography>
                 </form>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </Container>
       <Footer />
     </div>
   );

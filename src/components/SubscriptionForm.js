@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
+import React, { useState, useEffect } from "react";
+import { Container, Card } from "react-bootstrap";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
 
 function SubscriptionForm({ ebookTitle, ebookId, bookPoints }) {
   // Function to generate a unique subscription ID
@@ -9,19 +12,21 @@ function SubscriptionForm({ ebookTitle, ebookId, bookPoints }) {
   };
 
   // State to store form input values
-  const [subscriptionId, setSubscriptionId] = useState('');
-  const [globalId, setGlobalId] = useState('');
-  const [name, setName] = useState('');
-  const [grade, setGrade] = useState('');
-  const [joiningDate, setJoiningDate] = useState('');
-  const [empId, setEmpId] = useState('');
-  const [supervisor, setSupervisor] = useState('');
-  const [userEmail, setUserEmail] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [subscriptionId, setSubscriptionId] = useState("");
+  const [globalId, setGlobalId] = useState("");
+  const [name, setName] = useState("");
+  const [grade, setGrade] = useState("");
+  const [joiningDate, setJoiningDate] = useState("");
+  const [empId, setEmpId] = useState("");
+  const [supervisor, setSupervisor] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     // Fetch the logged-in user's details from local storage
-    const loggedInUserDetails = JSON.parse(localStorage.getItem('loggedInUser'));
+    const loggedInUserDetails = JSON.parse(
+      localStorage.getItem("loggedInUser")
+    );
 
     if (loggedInUserDetails) {
       // Extract the email, name, and id from the user details
@@ -31,30 +36,31 @@ function SubscriptionForm({ ebookTitle, ebookId, bookPoints }) {
       const userJoiningTimestamp = loggedInUserDetails.joiningDate; // Assuming 'joiningDate' is the key for joining date
 
       // Convert the timestamp to a human-readable date
-      const userJoiningDate = new Date(userJoiningTimestamp).toISOString().split('T')[0];
-  
+      const userJoiningDate = new Date(userJoiningTimestamp)
+        .toISOString()
+        .split("T")[0];
+
       // Set the email, name, and joining date in the component's state
       setUserEmail(userEmail);
       setName(userName);
       setGlobalId(userId);
       setEmpId(userId);
-      setJoiningDate(userJoiningDate || ''); // Set the default value for joining date
+      setJoiningDate(userJoiningDate || ""); // Set the default value for joining date
     }
   }, []);
-  
 
-    // Function to clear the error message
-    const clearErrorMessage = () => {
-      setErrorMessage('');
-    };
+  // Function to clear the error message
+  const clearErrorMessage = () => {
+    setErrorMessage("");
+  };
 
-    
   // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Check if a subscription with the same ebookId and userEmail already exists
-    const existingSubscriptions = JSON.parse(localStorage.getItem('subscriptions')) || [];
+    const existingSubscriptions =
+      JSON.parse(localStorage.getItem("subscriptions")) || [];
     const isAlreadySubscribed = existingSubscriptions.some(
       (subscription) =>
         subscription.ebookId === ebookId && subscription.userEmail === userEmail
@@ -62,7 +68,7 @@ function SubscriptionForm({ ebookTitle, ebookId, bookPoints }) {
 
     if (isAlreadySubscribed) {
       // Display an error message
-      setErrorMessage('You are already subscribed to this book.');
+      setErrorMessage("You are already subscribed to this book.");
 
       // Clear the error message after 3 seconds
       setTimeout(clearErrorMessage, 3000);
@@ -70,13 +76,13 @@ function SubscriptionForm({ ebookTitle, ebookId, bookPoints }) {
     }
 
     // Validate that joiningDate is not greater than the current date
-    const currentDate = new Date().toISOString().split('T')[0];
+    const currentDate = new Date().toISOString().split("T")[0];
     if (joiningDate > currentDate) {
-      setErrorMessage('Joining date cannot be greater than the current date.');
- // Clear the error message after 3 seconds
- setTimeout(clearErrorMessage, 3000);
- return;
-}
+      setErrorMessage("Joining date cannot be greater than the current date.");
+      // Clear the error message after 3 seconds
+      setTimeout(clearErrorMessage, 3000);
+      return;
+    }
     // Generate a unique subscription ID
     const newSubscriptionId = generateSubscriptionId();
     setSubscriptionId(newSubscriptionId);
@@ -102,7 +108,10 @@ function SubscriptionForm({ ebookTitle, ebookId, bookPoints }) {
     existingSubscriptions.push(subscriptionData);
 
     // Store the updated subscriptions array in localStorage
-    localStorage.setItem('subscriptions', JSON.stringify(existingSubscriptions));
+    localStorage.setItem(
+      "subscriptions",
+      JSON.stringify(existingSubscriptions)
+    );
   };
 
   return (
@@ -110,85 +119,89 @@ function SubscriptionForm({ ebookTitle, ebookId, bookPoints }) {
       <Container className="justify-content-center align-items-center">
         <Card>
           <Card.Body>
-            <h2 className="card-title text-center">Subscription Form</h2>
-            <Form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
               {/* Display the error message */}
-              {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+              {errorMessage && (
+                <Alert severity="error" sx={{ marginBottom: 2 }}>
+                  {errorMessage}
+                </Alert>
+              )}
 
-              <Form.Group controlId="globalId" className="mb-3">
-                <Form.Control
-                  type="text"
-                  placeholder="Global Id"
-                  value={globalId}
-                  onChange={(e) => setGlobalId(e.target.value)}
-                  required
-                />
-              </Form.Group>
+              {/* Replace Form.Group with TextField for each input */}
+              <TextField
+                fullWidth
+                id="globalId"
+                label="Global Id"
+                type="text"
+                value={globalId}
+                onChange={(e) => setGlobalId(e.target.value)}
+                required
+                sx={{ marginBottom: 2 }}
+              />
 
-              <Form.Group controlId="name" className="mb-3">
-                <Form.Control
-                  type="text"
-                  placeholder="Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-              </Form.Group>
+              <TextField
+                fullWidth
+                id="name"
+                label="Name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                sx={{ marginBottom: 2 }}
+              />
 
-              <Form.Group controlId="grade" className="mb-3">
-                <Form.Control
-                  type="text"
-                  placeholder="Grade"
-                  value={grade}
-                  onChange={(e) => setGrade(e.target.value)}
-                  required
-                />
-              </Form.Group>
+              <TextField
+                fullWidth
+                id="grade"
+                label="Grade"
+                type="text"
+                value={grade}
+                onChange={(e) => setGrade(e.target.value)}
+                required
+                sx={{ marginBottom: 2 }}
+              />
 
-              <Form.Group controlId="joiningDate" className="mb-3">
-                <Form.Control
-                  type="date"
-                  placeholder="Joining Date"
-                  value={joiningDate}
-                  onChange={(e) => setJoiningDate(e.target.value)}
-                  required
-                />
-              </Form.Group>
+              <TextField
+                fullWidth
+                id="joiningDate"
+                label="Joining Date"
+                type="date"
+                value={joiningDate}
+                onChange={(e) => setJoiningDate(e.target.value)}
+                required
+                sx={{ marginBottom: 2 }}
+              />
 
-              <Form.Group controlId="empId" className="mb-3">
-                <Form.Control
-                  type="text"
-                  placeholder="Emp Id"
-                  value={empId}
-                  onChange={(e) => setEmpId(e.target.value)}
-                  required
-                />
-              </Form.Group>
+              <TextField
+                fullWidth
+                id="empId"
+                label="Emp Id"
+                type="text"
+                value={empId}
+                onChange={(e) => setEmpId(e.target.value)}
+                required
+                sx={{ marginBottom: 2 }}
+              />
 
-              <Form.Group controlId="supervisor" className="mb-3">
-                <Form.Control
-                  type="text"
-                  placeholder="Supervisor"
-                  value={supervisor}
-                  onChange={(e) => setSupervisor(e.target.value)}
-                  required
-                />
-              </Form.Group>
+              <TextField
+                fullWidth
+                id="supervisor"
+                label="Supervisor"
+                type="text"
+                value={supervisor}
+                onChange={(e) => setSupervisor(e.target.value)}
+                required
+                sx={{ marginBottom: 2 }}
+              />
 
-              <Button variant="primary" type="submit" className="mb-3">
+              <Button variant="contained" color="success" type="submit" sx={{ marginBottom: 2 }}>
                 Subscribe
               </Button>
 
-              {subscriptionId && (
-                <p>
-                  Subscription ID: {subscriptionId}
-                </p>
-              )}
+              {subscriptionId && <p>Subscription ID: {subscriptionId}</p>}
 
-              {subscriptionId && (
-                <a href="/take-quiz">Take Quiz</a>
-              )}
-            </Form>
+              {subscriptionId && <a href="/take-quiz">Take Quiz</a>}
+            </form>
           </Card.Body>
         </Card>
       </Container>
