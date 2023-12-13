@@ -1,19 +1,28 @@
 import React from 'react';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 
 function Header() {
-  
   return (
-    <header className="navbar navbar-dark bg-dark">
-      <div className="container">
-       <a href="/"> <img
-          src="/images/logo.png" // logo
-          alt="Logo"
-          height="30"
-          className="d-inline-block align-top"
-        /></a>
-        <span className="navbar-brand mb-0 h1 ml-2">E-Library</span>
-      </div>
-    </header>
+    <AppBar position="static" style={{background:"black"}} >
+      <Toolbar>
+        <a href="/">
+          <img
+            src="/images/logo3.png"
+            alt="Logo"
+            height="30"
+            width="150"
+            style={{ marginRight: "20px" }}
+          />
+        </a>
+        <Typography variant="h6" component="div">
+          E-Library
+        </Typography>
+      </Toolbar>
+    </AppBar>
   );
 }
 

@@ -233,7 +233,7 @@ function SurfEBooks() {
       <br />
       <Footer />
       {/* Modal for eBook preview and description */}
-      <Modal show={showModal} onHide={closeModal}>
+      <Modal show={showModal} onHide={closeModal} className="modal-container">
         <Modal.Header closeButton>
           <Modal.Title>{selectedEbook && selectedEbook.title}</Modal.Title>
         </Modal.Header>
@@ -285,7 +285,7 @@ function SurfEBooks() {
       </Modal>
 
       {/* Modal for Subscription Form */}
-      <Modal show={showSubscriptionModal} onHide={closeSubscriptionModal}>
+      <Modal show={showSubscriptionModal} onHide={closeSubscriptionModal} className="modal-container">
         <Modal.Header closeButton>
           <Modal.Title>
             Subscribe to {selectedEbook && selectedEbook.title}
@@ -302,7 +302,7 @@ function SurfEBooks() {
       </Modal>
 
       {/* Modal for Recommending to Colleague*/}
-      <Modal show={showRecommendModal} onHide={closeRecommendModal}>
+      <Modal show={showRecommendModal} onHide={closeRecommendModal} className="modal-container">
         <Modal.Header closeButton>
           <Modal.Title>Recommend to Colleague</Modal.Title>
         </Modal.Header>

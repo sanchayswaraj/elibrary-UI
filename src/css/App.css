@@ -10,8 +10,24 @@ body {
   height: 100vh;
   align-items: center;
   justify-content: center;
-
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: transparent transparent; /* For Firefox */
+  overflow-y: scroll; /* Always show a scrollbar for scrolling */
 }
+
+/* For Webkit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 1px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Color of the thumb */
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent; /* Color of the track */
+}
+
 
 .card {
   background-color: rgba(255, 255, 255, 0.6); /* Card opacity (adjust as needed) */
@@ -203,3 +219,38 @@ card-hover {
   text-align: center;
   margin-top: 10px; /* Adjust the margin-top as needed */
 }
+
+
+/* TakeQuiz.css */
+
+.score-modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.score-section {
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+
+/* App.css */
+
+.modal-container {
+  margin-top: 40px; /* Adjust the margin-top value as needed */
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+}
+
+
+

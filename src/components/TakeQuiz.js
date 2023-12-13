@@ -13,6 +13,7 @@ import Navbar from "./includes/Navbar";
 import SideCard from "./includes/Sidecard";
 import Footer from "./includes/Footer";
 import quizData from "./includes/quizData";
+import "../css/App.css"; // Import your CSS file for styling
 
 function TakeQuiz() {
   const [selectedQuiz, setSelectedQuiz] = useState(null);
@@ -20,7 +21,8 @@ function TakeQuiz() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [totalPoints, setTotalPoints] = useState(0);
   const [subscriptions, setSubscriptions] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Initialize to 0
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [showScoreModal, setShowScoreModal] = useState(false);
 
   const resetQuiz = () => {
     setSelectedQuiz(null);
@@ -30,7 +32,6 @@ function TakeQuiz() {
     setCurrentQuestionIndex(0);
   };
 
-
   const handleNextQuestion = () => {
     setCurrentQuestionIndex(currentQuestionIndex + 1);
   };
@@ -39,7 +40,6 @@ function TakeQuiz() {
     setCurrentQuestionIndex(currentQuestionIndex - 1);
   };
 
-  //Including the Quiz questions file where questions are stored
   const quizQuestions = quizData;
 
   useEffect(() => {
@@ -59,7 +59,7 @@ function TakeQuiz() {
     setShowQuizCard(true);
     setSelectedAnswers({});
     setTotalPoints(0);
-    setCurrentQuestionIndex(0); // Reset current question index
+    setCurrentQuestionIndex(0);
   };
 
   const handleAnswerSelection = (questionIndex, answer) => {
@@ -90,8 +90,8 @@ function TakeQuiz() {
     });
 
     setTotalPoints(total);
+    setShowScoreModal(true);
 
-    // Update the local storage with the total points for the current user's subscription
     const userEmail = loggedInUserDetails.email;
 
     const updatedSubscriptions = subscriptions.map((subscription) => {
@@ -132,7 +132,6 @@ function TakeQuiz() {
 
     const isLastQuestion =
       currentQuestionIndex === quizQuestion.questions.length - 1;
-    const isQuizSubmitted = totalPoints > 0; // Check if the quiz is submitted
 
     return (
       <div>
@@ -149,8 +148,8 @@ function TakeQuiz() {
               key={answerIndex}
               variant={
                 selectedAnswers[currentQuestionIndex] === wrongAnswer
-                  ? "primary"
-                  : "outline-primary"
+                  ? "contained"
+                  : "outlined"
               }
               style={{ margin: "5px", alignSelf: "flex-start" }}
               onClick={() =>
@@ -164,8 +163,8 @@ function TakeQuiz() {
             variant={
               selectedAnswers[currentQuestionIndex] ===
               currentQuestion.correctAnswer
-                ? "primary"
-                : "outline-primary"
+                ? "contained"
+                : "outlined"
             }
             style={{ margin: "5px", alignSelf: "flex-start" }}
             onClick={() =>
@@ -180,7 +179,8 @@ function TakeQuiz() {
         </div>
         <div style={{ marginTop: "10px" }}>
           <Button
-            variant="primary"
+            variant="contained"
+            color="success"
             style={{ marginRight: "10px" }}
             onClick={handlePreviousQuestion}
             disabled={currentQuestionIndex === 0}
@@ -190,7 +190,8 @@ function TakeQuiz() {
             </span>
           </Button>
           <Button
-            variant="primary"
+            variant="contained"
+            color="success"
             style={{ marginRight: "10px" }}
             onClick={isLastQuestion ? handleSubmitQuiz : handleNextQuestion}
             disabled={!selectedAnswers[currentQuestionIndex]}
@@ -213,13 +214,28 @@ function TakeQuiz() {
             </span>
           </Button>
         </div>
-        {isQuizSubmitted && ( // Render "Total Points" if the quiz is submitted
-          <div
-            style={{ marginTop: "10px", fontWeight: "bold", fontSize: "20px" }}
-          >
-            Total Points: {totalPoints}
-          </div>
-        )}
+      </div>
+    );
+  };
+
+  const closeScoreModal = () => {
+    setShowScoreModal(false);
+  };
+
+  const renderScoreModal = () => {
+    if (!showScoreModal) {
+      return null; // Don't render the modal if showScoreModal is false
+    }
+
+    return (
+      <div className="score-modal">
+        <div>
+          <h3>Your Score</h3>
+          <p>Total Points: {totalPoints}</p>
+          <Button variant="contained" onClick={closeScoreModal}>
+            Close
+          </Button>
+        </div>
       </div>
     );
   };
@@ -281,6 +297,7 @@ function TakeQuiz() {
       <br />
       <br />
       <Footer />
+      {renderScoreModal()}
     </div>
   );
 }

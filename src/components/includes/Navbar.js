@@ -1,4 +1,14 @@
 import React, { useEffect, useState } from "react";
+import {
+  AppBar,
+  Badge,
+  IconButton,
+  Toolbar,
+  Typography,
+  Menu,
+  MenuItem,
+  Button,
+} from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBell,
@@ -6,7 +16,6 @@ import {
   faSignOutAlt,
   faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
-import Dropdown from "react-bootstrap/Dropdown";
 
 function Navbar() {
   const iconStyle = {
@@ -14,28 +23,24 @@ function Navbar() {
     cursor: "pointer",
   };
 
-  // Custom CSS styles for the icon buttons
   const iconButtonStyle = {
     background: "none",
     border: "none",
   };
 
-  const navbarStyle = {
-    position: "fixed",
-    top: 0,
-    width: "100%",
-    zIndex: 1000,
-    padding: "10px 10px", // Add padding (adjust values as needed)
-    margin: "0",
-  };
-
-  // Fetch the currently logged-in user details from local storage
+  const [notifications, setNotifications] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
   const loggedInUserDetails = JSON.parse(localStorage.getItem("loggedInUser"));
   const loggedInUserEmail = loggedInUserDetails ? loggedInUserDetails.email : "";
   const loggedInUserName = loggedInUserDetails ? loggedInUserDetails.name : "";
 
-  // Notification state
-  const [notifications, setNotifications] = useState([]);
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     // Fetch subscriptions and user data
@@ -67,86 +72,87 @@ function Navbar() {
     setNotifications(newNotifications);
   }, [loggedInUserEmail]);
 
-  // Clear notifications
   const clearNotifications = () => {
     setNotifications([]);
   };
 
   return (
-    <header className="navbar navbar-dark bg-dark" style={navbarStyle}>
-      <div className="container-fluid d-flex justify-content-between align-items-center">
-        <div className="d-flex align-items-center">
+    <AppBar position="fixed" style={{background:"black", height: 60 }} >
+      <Toolbar style={{ justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <a href="/">
             <img
-              src="/images/logo.png"
+              src="/images/logo3.png"
               alt="Logo"
               height="30"
-              className="d-inline-block align-top"
+              width="150"
+              style={{ marginRight: "10px" }}
             />
           </a>
+          <Typography variant="h6" component="div">
+          E-Library
+        </Typography>
         </div>
-        {/* Icons Container */}
-        <div className="d-flex align-items-center">
-          <span style={{ color: "white", marginRight: "10px" }}>
-            Welcome, {loggedInUserName}
-          </span>{" "}
-          {/* Display the username */}
-          <Dropdown>
-            <Dropdown.Toggle
-              variant="success"
-              id="dropdown-bell"
+
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Typography variant="h6" style={{ color: "white", marginRight: "10px", flex: 1 }}>
+            Welcome, {loggedInUserName || "Guest"}
+          </Typography>
+
+          <div>
+            <IconButton
+              id="mui-bell"
+              onClick={handleMenuOpen}
               style={iconButtonStyle}
             >
-              <FontAwesomeIcon icon={faBell} style={iconStyle} />
-              {notifications.length > 0 && (
-                <span className="badge badge-pill badge-danger ml-1">
-                  {notifications.length}
-                </span>
+              <Badge badgeContent={notifications.length} color="error">
+                <FontAwesomeIcon icon={faBell} style={iconStyle} />
+              </Badge>
+            </IconButton>
+
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+            >
+              {notifications.length === 0 ? (
+                <MenuItem disabled>You are all caught up, come back later</MenuItem>
+              ) : (
+                <>
+                  {notifications.map((notification, index) => (
+                    <MenuItem key={index}>
+                      <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
+                      {notification.message}
+                    </MenuItem>
+                  ))}
+                  <MenuItem onClick={clearNotifications}>
+                    <small>Clear</small>
+                  </MenuItem>
+                </>
               )}
-            </Dropdown.Toggle>
+            </Menu>
 
-            <Dropdown.Menu>
-            {notifications.length === 0 ? (
-              <Dropdown.Item disabled>
-                You are all caught up, come back later
-              </Dropdown.Item>
-            ) : (
-              <>
-                {notifications.map((notification, index) => (
-                  <Dropdown.Item key={index}>
-                    <FontAwesomeIcon icon={faEnvelope} className="mr-2" />{" "}
-                    {notification.message}
-                  </Dropdown.Item>
-                ))}
-                <Dropdown.Item onClick={clearNotifications}>
-                  <small>Clear</small>
-                </Dropdown.Item>
-              </>
-            )}
-          </Dropdown.Menu>
-        </Dropdown>
-
-          <Dropdown>
-            <Dropdown.Toggle
-              variant="success"
-              id="dropdown-user"
+            <IconButton
+              id="mui-user"
+              component={Button}
+              href="/account"
               style={iconButtonStyle}
             >
               <FontAwesomeIcon icon={faUser} style={iconStyle} />
-            </Dropdown.Toggle>
+            </IconButton>
 
-            <Dropdown.Menu>
-              <Dropdown.Item href="/account">
-                <FontAwesomeIcon icon={faUser} className="mr-2" /> My Account
-              </Dropdown.Item>
-              <Dropdown.Item href="/logout">
-                <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" /> Logout
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+            <IconButton
+              id="mui-logout"
+              component={Button}
+              href="/logout"
+              style={iconButtonStyle}
+            >
+              <FontAwesomeIcon icon={faSignOutAlt} style={iconStyle} />
+            </IconButton>
+          </div>
         </div>
-      </div>
-    </header>
+      </Toolbar>
+    </AppBar>
   );
 }
 

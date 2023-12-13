@@ -16,23 +16,31 @@ function ActiveSubscriptions() {
 
   useEffect(() => {
     const subscriptionsData = JSON.parse(localStorage.getItem("subscriptions"));
-    if (subscriptionsData) {
+    const loggedInUserDetails = JSON.parse(localStorage.getItem("loggedInUser"));
+  
+    if (subscriptionsData && loggedInUserDetails) {
+      const loggedInUserId = loggedInUserDetails.email;
+  
+      const userSubscriptions = subscriptionsData.filter(
+        (subscription) => subscription.userEmail === loggedInUserId
+      );
+  
       const currentTimestamp = new Date().getTime();
       const lastOneHourTimestamp = currentTimestamp - 60 * 15 * 1000;
-
-      const activeSubscriptions = subscriptionsData.filter(
+  
+      const activeSubscriptions = userSubscriptions.filter(
         (subscription) =>
           new Date(subscription.timestamp).getTime() > lastOneHourTimestamp
       );
-
+  
       setActiveSubscriptions(activeSubscriptions);
     }
   }, []);
-
+  
   // Modal for eBook preview and description
   const PreviewModal = ({ show, handleClose, ebook }) => {
     return (
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} className="modal-container">
         <Modal.Header closeButton>
           <Modal.Title>{ebook && ebook.title}</Modal.Title>
         </Modal.Header>
@@ -147,9 +155,7 @@ function ActiveSubscriptions() {
           </Col>
         </Row>
       </Container>
-      <br />
-      <br />
-      <br />
+     
       <Footer />
 
       {/* Render the PreviewModal component */}
